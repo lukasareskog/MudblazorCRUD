@@ -6,9 +6,23 @@
 @inject MudblazorCRUD.IService.IAppService appService
 @inject MudBlazor.ISnackbar Snackbar
 
-
-<MudTextField @bind-Value="article.Title" Label="Article Title" Variant="Variant.Text" Margin="Margin.Dense"> </MudTextField>
-<MudTextField @bind-Value="article.DocumentID" Label="Document ID" Variant="Variant.Text" Margin="Margin.Dense"> </MudTextField>
+<MudGrid>
+    <MudItem xs="12" sm="4" md="2">
+        <MudTextField @bind-Value="article.Title" Label="Article Title" Variant="Variant.Text" Margin="Margin.Dense"> </MudTextField>
+    </MudItem>
+    <MudItem xs="12" sm="4" md="2">
+        <MudTextField @bind-Value="article.DocumentID" Label="Document ID" Variant="Variant.Text" Margin="Margin.Dense"> </MudTextField>
+    </MudItem>
+    <MudItem xs="12" sm="4" md="2">
+        <MudSelect T="int" Label="Select Document" @bind-Value="article.DocumentID">
+            @foreach (var doc in documents)
+            {
+                <MudSelectItem T="int" Value="@doc.DocumentID">@doc.Title</MudSelectItem>
+            }
+        </MudSelect>
+    </MudItem>
+    
+</MudGrid>
 <MudButton Variant="Variant.Filled" Color = "Color.Success" OnClick="Save">Save</MudButton>
 
 <hr />
@@ -23,14 +37,16 @@
         <MudTh>Article ID</MudTh>
         <MudTh>Article Title</MudTh>
         <MudTh>Article Document ID</MudTh>
+        <MudTh>Article Document Title</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="ArticleId">@context.Id</MudTd>
+        <MudTd DataLabel="ArticleId">@context.ArticleID</MudTd>
         <MudTd DataLabel="ArticleTitle">@context.Title</MudTd>
         <MudTd DataLabel="ArticleDocID">@context.DocumentID</MudTd>
+        <MudTd DataLabel="ArticleDocTitle">@context.Document.Title</MudTd>
         <MudTd DataLabel="">
-            <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
-            <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Edit(@context.ArticleID))" Color="Color.Primary" Icon="@Icons.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Delete(@context.ArticleID))" Color="Color.Secondary" Icon="@Icons.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
         </MudTd>
     </RowTemplate>
     <PagerContent>
@@ -51,10 +67,14 @@
 
     private Article article = new Article();
     private HashSet<Article> articles = new HashSet<Article>();
+    private Document document = new Document();
+    private HashSet<Document> documents = new HashSet<Document>();
+
 
     protected override async Task OnInitializedAsync()
     {
         GetArticles();
+        GetDocuments();
     }
 
     private HashSet<Article> GetArticles()
@@ -63,11 +83,17 @@
         return articles;
     }
 
+    private HashSet<Document> GetDocuments()
+    {
+        documents = appService.GetDocuments();
+        return documents;
+    }
+
     private bool FilterFunc(Article article)
     {
         if(string.IsNullOrEmpty(searchString)) return true;
         if (article.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
-        if (article.Id.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (article.ArticleID.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         if (article.DocumentID.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase)) return true;
         return false;
     }
@@ -82,12 +108,12 @@
 
     private void Edit(int articleID)
     {
-        article = articles.FirstOrDefault(x => x.Id == articleID);
+        article = articles.FirstOrDefault(x => x.ArticleID == articleID);
     }
 
     private void Delete(int articleID)
     {
-        article = articles.FirstOrDefault(x => x.Id == articleID);
+        article = articles.FirstOrDefault(x => x.ArticleID == articleID);
         if(article != null)
         {
             appService.Delete(article);

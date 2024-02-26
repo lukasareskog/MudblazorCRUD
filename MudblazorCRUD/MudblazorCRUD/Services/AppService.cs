@@ -27,20 +27,20 @@ namespace MudblazorCRUD.Services
 
         public Article GetArticleByID(int articleID)
         {
-            return _context.Articles.SingleOrDefault(x => x.Id == articleID);
+            return _context.Articles.SingleOrDefault(x => x.ArticleID == articleID);
             
         }
 
         public Document GetDocumentByID(int documentID)
         {
-            return _context.Documents.SingleOrDefault(x => x.Id == documentID);
+            return _context.Documents.SingleOrDefault(x => x.DocumentID == documentID);
         }
 
 
         // Save article
         public void Save(Article article)
         {
-            if (article.Id == 0)
+            if (article.ArticleID == 0)
             {
                 _context.Articles.Add(article);
             }
@@ -54,7 +54,7 @@ namespace MudblazorCRUD.Services
         // Save document
         public void Save(Document document)
         {
-            if(document.Id == 0)
+            if(document.DocumentID == 0)
             {
                 _context.Documents.Add(document);
             }
@@ -69,8 +69,8 @@ namespace MudblazorCRUD.Services
         // Kanske ändra till Task?
         public string Delete(Article article)
         {
-            var articleID = article.Id;
-            var _article = _context.Articles.FirstOrDefault(x => x.Id == articleID);
+            var articleID = article.ArticleID;
+            var _article = _context.Articles.FirstOrDefault(x => x.ArticleID == articleID);
 
             if(_article != null)
             {
@@ -83,8 +83,8 @@ namespace MudblazorCRUD.Services
         // Delete document
         public string Delete(Document document)
         {
-            var documentID = document.Id;
-            var _document = _context.Documents.FirstOrDefault(x => x.Id == documentID);
+            var documentID = document.DocumentID;
+            var _document = _context.Documents.FirstOrDefault(x => x.DocumentID == documentID);
 
             if (_document != null)
             {

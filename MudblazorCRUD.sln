@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudblazorCRUD", "MudblazorCRUD\MudblazorCRUD\MudblazorCRUD.csproj", "{A032973B-BB02-41EE-8543-6A75A356F39B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudblazorCRUD", "MudblazorCRUD\MudblazorCRUD\MudblazorCRUD.csproj", "{A032973B-BB02-41EE-8543-6A75A356F39B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudblazorCRUD.Client", "MudblazorCRUD\MudblazorCRUD.Client\MudblazorCRUD.Client.csproj", "{43A089D3-7788-4E57-A8C1-C889B5DA341F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudblazorCRUD.Client", "MudblazorCRUD\MudblazorCRUD.Client\MudblazorCRUD.Client.csproj", "{43A089D3-7788-4E57-A8C1-C889B5DA341F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

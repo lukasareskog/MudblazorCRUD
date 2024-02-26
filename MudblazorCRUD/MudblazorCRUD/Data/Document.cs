@@ -8,7 +8,11 @@ namespace MudblazorCRUD.Data
 
         [Key] // Databasgenererat Autoincrement
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-        public string Title { get; set; } = "";
+        public int DocumentID { get; set; }
+        public string Title { get; set; } 
+
+        public List<Article> Articles { get; set; }
+
+
     }
 }
