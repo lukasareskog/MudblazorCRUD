@@ -1,0 +1,99 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+@using MudblazorCRUD.Data
+@using MudBlazor
+@inject MudblazorCRUD.IService.IAppService appService
+@inject MudBlazor.ISnackbar Snackbar
+
+
+<MudTextField @bind-Value="article.Title" Label="Article Title" Variant="Variant.Text" Margin="Margin.Dense"> </MudTextField>
+<MudTextField @bind-Value="article.DocumentID" Label="Document ID" Variant="Variant.Text" Margin="Margin.Dense"> </MudTextField>
+<MudButton Variant="Variant.Filled" Color = "Color.Success" OnClick="Save">Save</MudButton>
+
+<hr />
+
+<MudTable Items="@GetArticles()" Dense = "@dense" Hover ="@hover" Filter = "new Func<Article, bool>(FilterFunc)" @bind-article="article"> 
+    <ToolBarContent>
+        <MudText Typo ="Typo.h6">Articles</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment ="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class ="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Article ID</MudTh>
+        <MudTh>Article Title</MudTh>
+        <MudTh>Article Document ID</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="ArticleId">@context.Id</MudTd>
+        <MudTd DataLabel="ArticleTitle">@context.Title</MudTd>
+        <MudTd DataLabel="ArticleDocID">@context.DocumentID</MudTd>
+        <MudTd DataLabel="">
+            <MudFab @onclick="@(()=>Edit(@context.Id))" Color="Color.Primary" Icon="@Icons.Filled.Edit" Size="Size.Small" IconSize="Size.Small" />
+            <MudFab @onclick="@(()=>Delete(@context.Id))" Color="Color.Secondary" Icon="@Icons.Filled.Delete" Size="Size.Small" IconSize="Size.Small" />
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+<MudSwitch @bind-Checked ="@hover" Color="Color.Primary">Hover</MudSwitch>
+<MudSwitch @bind-Checked="@dense" Color="Color.Primary">Dense</MudSwitch>
+<MudText Inline="true">Selected: @article.Title </MudText>
+
+<hr />
+
+
+@code {
+    private bool dense = false;
+    private bool hover = true;
+    private string searchString = "";
+
+    private Article article = new Article();
+    private HashSet<Article> articles = new HashSet<Article>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        GetArticles();
+    }
+
+    private HashSet<Article> GetArticles()
+    {
+        articles = appService.GetArticles();
+        return articles;
+    }
+
+    private bool FilterFunc(Article article)
+    {
+        if(string.IsNullOrEmpty(searchString)) return true;
+        if (article.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (article.Id.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        if (article.DocumentID.ToString().Equals(searchString, StringComparison.OrdinalIgnoreCase)) return true;
+        return false;
+    }
+
+    private void Save()
+    {
+        appService.Save(article);
+        article = new Article();
+        Snackbar.Add("Article Saved", Severity.Success);
+        GetArticles();
+    }
+
+    private void Edit(int articleID)
+    {
+        article = articles.FirstOrDefault(x => x.Id == articleID);
+    }
+
+    private void Delete(int articleID)
+    {
+        article = articles.FirstOrDefault(x => x.Id == articleID);
+        if(article != null)
+        {
+            appService.Delete(article);
+            Snackbar.Add("Article Deleted", Severity.Success);
+            GetArticles();
+        }
+        
+    }
+}
